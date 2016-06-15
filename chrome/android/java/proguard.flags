@@ -181,3 +181,6 @@
 # build lands (https://codereview.chromium.org/1597273005/).
 -keep class android.support.v7.app.ToolbarActionBar$ToolbarCallbackWrapper {*;}
 -keep class android.support.v7.internal.app.ToolbarActionBar$ToolbarCallbackWrapper {*;}
+
+-keep public class com.cyanogen.ambient.* { public *; }
+-dontwarn com.cyanogen.ambient.**

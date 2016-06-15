@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr format="reference" name="pluginActionOneIcon"/>
+    <attr format="string" name="pluginActionOneTitle"/>
+    <attr format="reference" name="pluginActionTwoIcon"/>
+    <attr format="string" name="pluginActionTwoTitle"/>
+    <attr format="reference" name="pluginBadgeIcon"/>
+    <attr format="reference" name="pluginBrandColor"/>
+    <attr format="reference" name="pluginBrandIcon"/>
+    <attr format="string" name="pluginCreditsButtonText"/>
+    <attr format="string" name="pluginDependentPackage"/>
+    <attr format="reference" name="pluginImMimeIcon"/>
+    <attr format="reference" name="pluginLoginIcon"/>
+    <attr format="reference" name="pluginSettingsActivity"/>
+    <attr format="reference" name="pluginSingleColorBrandIcon"/>
+    <attr format="string" name="pluginSubscriptionButtonText"/>
+    <attr format="string" name="pluginT9HintDescription"/>
+    <attr format="reference" name="pluginVideoMimeIcon"/>
+    <attr format="reference" name="pluginVoiceMimeIcon"/>
+    <declare-styleable name="CallerInfoService"><attr format="string" name="pluginTitle"/><attr format="string" name="pluginDescription"/><attr format="reference" name="pluginProperties"/><attr format="string" name="pluginPrivacyPolicyUrl"/><attr format="reference" name="pluginBrandLogoLight"/><attr format="reference" name="pluginBrandLogoDark"/><attr format="reference" name="pluginBadgeLogo"/></declare-styleable>
+    <declare-styleable name="DeepLinkStylable"><attr name="pluginBrandIcon"/><attr name="pluginBrandColor"/><attr name="pluginSettingsActivity"/></declare-styleable>
+    <declare-styleable name="InCallService"><attr format="string" name="inCallPluginTitle"/><attr format="string" name="inCallPluginDescription"/><attr name="pluginBrandIcon"/><attr name="pluginBadgeIcon"/><attr name="pluginLoginIcon"/><attr name="pluginActionOneTitle"/><attr name="pluginActionTwoTitle"/><attr name="pluginActionOneIcon"/><attr name="pluginActionTwoIcon"/><attr name="pluginCreditsButtonText"/><attr name="pluginSubscriptionButtonText"/><attr format="string" name="pluginNudgeService"/><attr name="pluginDependentPackage"/><attr name="pluginT9HintDescription"/><attr name="pluginSingleColorBrandIcon"/><attr name="pluginImMimeIcon"/><attr name="pluginVideoMimeIcon"/><attr name="pluginVoiceMimeIcon"/></declare-styleable>
+    <integer name="ambientsdk_version">1051100</integer>
+    <integer name="min_ambientcore_version">1050700</integer>
+    <integer name="needs_contacts_access">2</integer>
+    <integer name="supports_forward_lookup">4</integer>
+    <integer name="supports_spam">1</integer>
+    <string name="common_cyanogen_ambient_unknown_issue">Unknown issue</string>
+    <string name="deep_link_create_a_link">Create a Link</string>
+    <string name="deep_link_create_a_link_with">Create a Link with %1%s</string>
+    <string name="deep_link_link">DeepLink</string>
+    <string name="deep_link_make_a_task">Make a Task</string>
+    <string name="deep_link_make_a_task_with">Make a Task with %1$s</string>
+    <string name="deep_link_note">Note</string>
+    <string name="deep_link_take_a_note">Take a Note</string>
+    <string name="deep_link_take_a_note_with">Take a Note with %1$s</string>
+    <string name="deep_link_task">Task</string>
+    <string name="deep_link_view_label">View %1$s</string>
+    <string name="df_domain_email">email</string>
+    <string name="df_domain_email_permission">Access your email</string>
+    <string name="df_domain_music">music</string>
+    <string name="df_domain_music_permission">Access your music</string>
+    <string name="install_ambient_msg">This application will not run unless you install Ambient services</string>
+    <string name="install_button_title">Install</string>
+    <string name="update_ambient_msg">This application will not run unless you update Ambient services</string>
+    <string name="update_ambient_title">Update Ambient services</string>
+    <string name="update_button_title">Update</string>
+</resources>

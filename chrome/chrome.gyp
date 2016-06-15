@@ -534,6 +534,7 @@
             '../printing/printing.gyp:printing_java',
             '../sync/sync.gyp:sync_java',
             '../third_party/WebKit/public/blink.gyp:android_mojo_bindings_java',
+            '../third_party/ambientsdk/ambient.gyp:ambient_sdk_javalib',
             '../third_party/android_data_chart/android_data_chart.gyp:android_data_chart_java',
             '../third_party/android_media/android_media.gyp:android_media_java',
             '../third_party/android_protobuf/android_protobuf.gyp:protobuf_nano_javalib',
