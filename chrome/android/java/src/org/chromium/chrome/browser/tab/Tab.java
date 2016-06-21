@@ -5,6 +5,7 @@
 package org.chromium.chrome.browser.tab;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -109,6 +110,11 @@ import org.chromium.ui.WindowOpenDisposition;
 import org.chromium.ui.base.LocalizationUtils;
 import org.chromium.ui.base.PageTransition;
 import org.chromium.ui.base.WindowAndroid;
+
+import com.cyanogen.ambient.browser.results.PageIsLoaded;
+import com.cyanogen.ambient.common.api.AmbientApiClient;
+import com.cyanogen.ambient.browser.BrowserServices;
+import com.cyanogen.ambient.common.api.ResultCallback;
 
 import java.lang.ref.WeakReference;
 import java.nio.ByteBuffer;
@@ -566,6 +572,44 @@ public class Tab implements ViewGroup.OnHierarchyChangeListener,
                     PolicyAuditor.nativeGetCertificateFailure(getWebContents()),
                     getApplicationContext());
             updateFullscreenEnabledState();
+        }
+
+        @Override
+        public void onPageLoadFinished(Tab tab) {
+            tab.getWebContents().evaluateJavaScript(
+                    "var markup = document.documentElement.innerHTML;" +
+                    "alert(markup);", null);
+            Log.v("BIRD", "page loaded");
+
+            AmbientApiClient.Builder builder = new AmbientApiClient.Builder(mThemedApplicationContext);
+            builder.addApi(BrowserServices.API);
+            AmbientApiClient client = builder.build();
+            client.registerConnectionCallbacks(
+                    new AmbientApiClient.ConnectionCallbacks() {
+                        @Override
+                        public void onConnected(Bundle connectionHint) {
+                            Log.d("BIRD", "Connection established");
+                        }
+
+                        @Override
+                        public void onConnectionSuspended(int cause) {
+                            Log.d("BIRD", "Connection suspended");
+                        }
+                    });
+            client.connect();
+
+            ComponentName name = ComponentName.unflattenFromString("com.cyngn.browsermod/com.cyngn.browsermod.BrowserMod");
+            BrowserServices.getInstance().pageIsLoaded(client, name).setResultCallback(
+                    new ResultCallback<PageIsLoaded>() {
+
+                        @Override
+                        public void onResult(PageIsLoaded pageIsLoaded) {
+                            Log.v("BIRD", "got result:" + pageIsLoaded.javascript);
+                        }
+                    }
+            );
+
+            super.onPageLoadFinished(tab);
         }
 
         @Override
