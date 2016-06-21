@@ -5,6 +5,7 @@
 package org.chromium.chrome.browser.tab;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -102,6 +103,7 @@ import org.chromium.content_public.browser.LoadUrlParams;
 import org.chromium.content_public.browser.WebContents;
 import org.chromium.content_public.common.Referrer;
 import org.chromium.content_public.common.TopControlsState;
+import org.chromium.content_public.browser.JavaScriptCallback;
 import org.chromium.printing.PrintManagerDelegateImpl;
 import org.chromium.printing.PrintingController;
 import org.chromium.printing.PrintingControllerImpl;
@@ -109,6 +111,12 @@ import org.chromium.ui.WindowOpenDisposition;
 import org.chromium.ui.base.LocalizationUtils;
 import org.chromium.ui.base.PageTransition;
 import org.chromium.ui.base.WindowAndroid;
+
+import com.cyanogen.ambient.browser.results.JsonResult;
+import com.cyanogen.ambient.browser.results.PageIsLoaded;
+import com.cyanogen.ambient.common.api.AmbientApiClient;
+import com.cyanogen.ambient.browser.BrowserServices;
+import com.cyanogen.ambient.common.api.ResultCallback;
 
 import java.lang.ref.WeakReference;
 import java.nio.ByteBuffer;
@@ -558,6 +566,10 @@ public class Tab implements ViewGroup.OnHierarchyChangeListener,
 
     // TODO(dtrainor): Port more methods to the observer.
     private final TabObserver mTabObserver = new EmptyTabObserver() {
+
+        AmbientApiClient mClient;
+        Tab mTab;
+
         @Override
         public void onSSLStateUpdated(Tab tab) {
             PolicyAuditor auditor =
@@ -566,6 +578,83 @@ public class Tab implements ViewGroup.OnHierarchyChangeListener,
                     PolicyAuditor.nativeGetCertificateFailure(getWebContents()),
                     getApplicationContext());
             updateFullscreenEnabledState();
+        }
+
+        @Override
+        public void onLoadStopped(final Tab tab, boolean toDifferentDocument) {
+            super.onLoadStopped(tab, toDifferentDocument);
+            mTab = tab;
+            AmbientApiClient.Builder builder = new AmbientApiClient.Builder(mThemedApplicationContext);
+            builder.addApi(BrowserServices.API);
+            mClient = builder.build();
+            mClient.registerConnectionCallbacks(
+                    new AmbientApiClient.ConnectionCallbacks() {
+                        @Override
+                        public void onConnected(Bundle connectionHint) {
+                            Log.d("BIRD", "Connection established");
+                        }
+
+                        @Override
+                        public void onConnectionSuspended(int cause) {
+                            Log.d("BIRD", "Connection suspended");
+                        }
+                    });
+            mClient.connect();
+
+            BrowserServices.getInstance().pageLoaded(mClient, tempName, tab.getUrl()).setResultCallback(
+                    new ResultCallback<PageIsLoaded>() {
+
+                        @Override
+                        public void onResult(PageIsLoaded pageIsLoaded) {
+                            Log.v("BIRD", "javascript: " + pageIsLoaded.javascript);
+                            if (pageIsLoaded.javascript != null) {
+                                JavascriptExecuted callback = new JavascriptExecuted();
+                                tab.getWebContents().evaluateJavaScript(
+                                        pageIsLoaded.javascript, callback);
+                            }
+                        }
+                    }
+            );
+
+        }
+
+        ComponentName tempName
+                = ComponentName.unflattenFromString("com.cyngn.browsermod/com.cyngn.browsermod.BrowserMod");
+
+        class JavascriptExecuted implements JavaScriptCallback {
+            @Override
+            public void handleJavaScriptResult(String jsonResult) {
+                Log.v("BIRD", "data: " + jsonResult);
+                if (jsonResult != null) {
+                    BrowserServices.getInstance().onPostExecute(mClient, tempName, jsonResult).setResultCallback(
+                            new ResultCallback<JsonResult>() {
+
+                                @Override
+                                public void onResult(JsonResult pageIsLoaded) {
+                                    if (pageIsLoaded.result != null) {
+                                        // TODO: build a real interface that's not just some crappy page insert
+                                        String shittyJavascript = "var body   = document.body || document.getElementsByTagName('body')[0],\n" +
+                                                "    newpar = document.createElement('p');\n" +
+                                                "newpar.innerHTML = 'Amazon Product found: <a href=" + pageIsLoaded.result + ">here</a>';\n" +
+                                                "body.insertBefore(newpar,body.childNodes[0]);";
+
+
+                                        mTab.getWebContents().evaluateJavaScript(
+                                                shittyJavascript, null);
+
+                                        Log.v("BIRD", "jsonResult:" + pageIsLoaded.result);
+                                    }
+                                }
+                            }
+                    );
+                }
+            }
+        }
+
+        @Override
+        public void onPageLoadFinished(final Tab tab) {
+
+            super.onPageLoadFinished(tab);
         }
 
         @Override
