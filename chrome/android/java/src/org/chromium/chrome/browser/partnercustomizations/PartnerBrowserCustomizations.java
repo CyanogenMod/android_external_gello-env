@@ -142,14 +142,21 @@ public class PartnerBrowserCustomizations {
                     Cursor cursor = contentResolver.query(
                             buildQueryUri(PARTNER_HOMEPAGE_PATH, context),
                             null, null, null, null);
-                    if (cursor != null && cursor.moveToFirst() && cursor.getColumnCount() == 1
+                    String url = null;
+                    if (cursor != null && cursor.getCount() > 0 && cursor.getColumnCount() == 10
                             && !isCancelled()) {
-                        if (TextUtils.isEmpty(sHomepage)
-                                || !sHomepage.equals(cursor.getString(0))) {
-                            mHomepageUriChanged = true;
+                        while (cursor.moveToNext()) {
+                            boolean isDefault = cursor.getInt(7) == 1;
+                            if (isDefault) {
+                                url = cursor.getString(3);
+                            }
                         }
-                        sHomepage = cursor.getString(0);
                     }
+                    if (TextUtils.isEmpty(sHomepage)
+                            || !sHomepage.equals(url)) {
+                        mHomepageUriChanged = true;
+                    }
+                    sHomepage = url;
                     if (cursor != null) cursor.close();
                 } catch (Exception e) {
                     Log.w(TAG, "Partner homepage provider URL read failed : ", e);

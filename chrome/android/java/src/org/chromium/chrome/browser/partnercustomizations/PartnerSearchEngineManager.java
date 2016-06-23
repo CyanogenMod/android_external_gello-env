@@ -51,7 +51,7 @@ public class PartnerSearchEngineManager {
     private static final String SEARCH_ENGINE_COLUMN_KEYWORD = "keyword";
     private static final String SEARCH_ENGINE_COLUMN_SEARCH_URL = "searchUrl";
     private static final String SEARCH_ENGINE_COLUMN_FAVICON_URL = "faviconUrl";
-    private static final String SEARCH_ENGINE_COLUMN_DEFAULT= "default";
+    private static final String SEARCH_ENGINE_COLUMN_DEFAULT= "the_default";
 
     private static final String[] SEARCH_ENGINE_PROJECTION = {
         SEARCH_ENGINE_COLUMN_ID,

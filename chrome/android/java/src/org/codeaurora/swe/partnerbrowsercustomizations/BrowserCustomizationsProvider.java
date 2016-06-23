@@ -106,6 +106,7 @@ public class BrowserCustomizationsProvider extends ContentProvider {
         switch (URI_MATCHER.match(uri)) {
             case URI_MATCH_HOMEPAGE:
             {
+                // [TODO][MSB]: Call out to partner provider for information
                 MatrixCursor cursor = new MatrixCursor(new String[]{"homepage"}, 1);
                 cursor.addRow(new Object[]{
                         getContext().getResources().getString(R.string.default_homepage_url)});
